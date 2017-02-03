@@ -26,7 +26,7 @@ This perl modules:
 
 ## Files
 
-Currently there is only one file (gffRapeLib.pm) which have the backbone of all the suite.
+Currently there is only one file (**gffRapeLib.pm**) which have the backbone of all the suite.
 The other perl scripts are aplications of the functions developed in gffRapeLib.pm
 
 Here you can see a brief description of each one:
