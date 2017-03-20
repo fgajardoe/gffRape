@@ -621,9 +621,11 @@ sub printGene{
 sub filterGeneTranscripts{
 	my $gene=shift;
 	my $opt=shift; # puede ser longest o shortest
-	
+
+	my $att=$gene->{attributes};
+	my $id=$$att{ID};
 	if(!exists $gene->{mRNA}){
-		print STDERR "Gene not contain mRNA childs. Skipped\n";
+		print STDERR "Gene $id not contain mRNA childs. Skipped\n";
 		return 0;
 	}
 
