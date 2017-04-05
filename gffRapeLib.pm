@@ -306,6 +306,7 @@ sub gff2genemodel{
 sub gff2genemodel_reset_id{
 
 	my $ingff=shift;
+	my $idprefix=shift;
 	open GFF, "<$ingff" or die "Cannot open $ingff";
 	
 	my %gene=();
@@ -354,7 +355,7 @@ sub gff2genemodel_reset_id{
 #		if(!$att{ID}){
 			my $original_id;
 			my $original_parent;
-			my $id=$col[2].$count_type{$col[2]};
+			my $id=$idprefix.".".$col[2].$count_type{$col[2]};
 			if($att{ID}){
 				$original_id=$att{ID};
 			}

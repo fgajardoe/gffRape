@@ -66,7 +66,8 @@ foreach my $idlst(@genelst){
 	if($opt_k ne 'all'){
 		$filtered_gene=filterGeneTranscripts($gene,$opt_k);
 	}
-	if($filtered_gene!=0){
+#	if($filtered_gene!=0){
+	if($filtered_gene){ # testeando. cambie la linea de arriba por esta. para evitar un warning que me aparecia
 		printGene($filtered_gene);
 	}
 }

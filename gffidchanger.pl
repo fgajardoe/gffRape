@@ -19,29 +19,30 @@ use Data::Dumper;
 #use Misc; #qw(gff2genemodel printGene filterGeneTranscripts);
 use gffRapeLib;
 
-our($opt_h,$opt_i);
+our($opt_h,$opt_i,$opt_p);
 
 
 # Usage
 my $usage="Usage: perl $0 -i input.gff
 Options:
 			-i input_gff	Provide input GFF to reset IDs (mandatory).
+			-p prefix		Prefix to use on new IDs (mandatory)
 			-h				Print this help
 
 ";
 
 # Get options
-getopts('hi:');
+getopts('hp:i:');
 
 # Check if there is input
-if(($opt_h)||(!$opt_i)){
+if(($opt_h)||(!$opt_i)||(!$opt_p)){
 	print $usage;
 	exit 0;
 }
 
 # Main
 
-my $genes=gff2genemodel_reset_id($opt_i);
+my $genes=gff2genemodel_reset_id($opt_i,$opt_p);
 
 my @genelst;
 #if($opt_l){
