@@ -1,0 +1,3 @@
+# TO-DO list
+
+* gffextract.pl : an option like -l, but which recognize mRNA IDs. looks like most people use it, because it is possible to differentiate isoforms.
