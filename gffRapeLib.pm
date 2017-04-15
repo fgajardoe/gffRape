@@ -32,6 +32,12 @@ use Data::Dumper;
 #}
 
 
+# Title: add tag
+# Usage: add_tag(tag,value,feature)
+# Example: add_tag("Parent","im_your_daddy01",gene)
+#
+#	TODO
+
 # Title		: gff2genemodel
 # Usage		: my $g=gff2genemodel("path/to/gene_model.gff")
 #
@@ -307,6 +313,13 @@ sub gff2genemodel_reset_id{
 
 	my $ingff=shift;
 	my $idprefix=shift;
+	my $opt_z=shift;
+	my $opt_z_limit_tmp=shift; # jash con los limites para los 0s en los ids por feature.
+	my %opt_z_limit=%$opt_z_limit_tmp;
+
+	#my $opt_Z_limit_tmp=shift; # jash con los prefijos por feature
+	#my %opt_Z_limit=%$opt_Z_limit_tmp;
+
 	open GFF, "<$ingff" or die "Cannot open $ingff";
 	
 	my %gene=();
@@ -355,7 +368,20 @@ sub gff2genemodel_reset_id{
 #		if(!$att{ID}){
 			my $original_id;
 			my $original_parent;
-			my $id=$idprefix.".".$col[2].$count_type{$col[2]};
+			my $ct;
+			if($opt_z){
+				my $z_limit=$opt_z_limit{$col[2]};
+				$ct=sprintf("%0".$z_limit."d",$count_type{$col[2]});
+			}else{
+				$ct=$count_type{$col[2]};
+			}
+			my $id;
+	#		if($opt_Z_limit{$col[2]}){
+	#			$id=$idprefix.$opt_Z_limit{$col[2]}.$ct;
+	#		}
+	#		else{
+				$id=$idprefix.uc($col[2]).$ct;
+	#		}
 			if($att{ID}){
 				$original_id=$att{ID};
 			}
