@@ -4,9 +4,8 @@
 
 This is a collection of scripts to filter and extract relevant biological information from
 GFF3 files ( https://github.com/The-Sequence-Ontology/Specifications/blob/master/gff3.md ).
-All here still is very disorganized. Also I am learning and getting used to Git. So patience :)
 
-Currently the next GFF features are supporteed. Any other will be skipped:
+Currently this features are supporteed. Any other will be skipped:
 
 * gene
 * mRNA
