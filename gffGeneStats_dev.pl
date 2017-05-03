@@ -34,7 +34,7 @@ use strict;
 use warnings;
 use utf8;
 use Data::Dumper;
-use Misc;
+use gffRapeLib;
 
 my $usage="Usage: perl $0 input.gff\n";
 
@@ -77,30 +77,38 @@ foreach my $geneid(keys %$genemodel){
 		my $mrna=$$genemodel{$geneid}->{mRNA};
 		
 
-		# recorremos cada uno buscando el mRNA mas largo
-		my $longest_len=0;
-		my $longest_id;
-		foreach my $mrnaid(keys %$mrna){
+		# obtenemos la isoforma mas larga
+		my $genemodel_longest_iso=filterGeneTranscripts($$genemodel{$geneid}, 'longest');
+		my @longest_iso_id=keys %$genemodel_longest_iso;
 
-			# y calculamos su largo
-			my $start=$$mrna{$mrnaid}->{start};
-			my $end=$$mrna{$mrnaid}->{end};
-			my $mrnalen= $end - $start;
-			
-			if($mrnalen>=$longest_len){
-				$longest_id=$mrnaid;
-				$longest_len=$mrnalen;
-			}
-			else{
-				print STDERR "Warning: $mrnaid length ($mrnalen) < 0 ?. skipped.";
-				next;
-			}
-		}
-		
-		# ahora recorremos los exones del mRNA mas largo
-		if(exists $$mrna{$longest_id}->{exon}){
+#		print Dumper $genemodel_longest_iso;
+#		exit 1;
+
+		# recorremos cada uno buscando el mRNA mas largo. DEPRECATED. ahora lo hacemos con la funcion (ver arriba)
+#		my $longest_len=0;
+#		my $longest_id;
+#		foreach my $mrnaid(keys %$mrna){
+#
+#			# y calculamos su largo
+#			my $start=$$mrna{$mrnaid}->{start};
+#			my $end=$$mrna{$mrnaid}->{end};
+#			my $mrnalen= $end - $start;
+#			
+#			if($mrnalen>=$longest_len){
+#				$longest_id=$mrnaid;
+#				$longest_len=$mrnalen;
+#			}
+#			else{
+#				print STDERR "Warning: $mrnaid length ($mrnalen) < 0 ?. skipped.";
+#				next;
+#			}
+#		}
+		# ahora recorremos los exones del mRNA mas largo.
+	#	if(exists $$mrna{$longest_id}->{exon}){
+		if(exists $genemodel_longest_iso->{mRNA}->{$longest_iso_id[0]}->{exon}){
 			$exon_sum=0;
-			my $exon=$$mrna{$longest_id}->{exon};
+			#my $exon=$$mrna{$longest_id}->{exon};
+			my $exon=$$genemodel_longest_iso->{mRNA}->{$longest_iso_id[0]}->{exon};
 			foreach my $exonid(keys %$exon){
 				my $start=$$exon{$exonid}->{start};
 				my $end=$$exon{$exonid}->{end};
@@ -112,9 +120,10 @@ foreach my $geneid(keys %$genemodel){
 		}
 
 		# lo mismo para los intrones
-		if(exists $$mrna{$longest_id}->{intron}){
+		if(exists $genemodel_longest_iso->{mRNA}->{$longest_iso_id[0]}->{intron}){
 			$intron_sum=0;
-			my $intron=$$mrna{$longest_id}->{intron};
+
+			my $intron=$$genemodel_longest_iso->{mRNA}->{$longest_iso_id[0]}->{intron};
 			foreach my $intronid(keys %$intron){
 				my $start=$$intron{$intronid}->{start};
 				my $end=$$intron{$intronid}->{end};
