@@ -29,7 +29,7 @@ my $usage="Usage: perl $0 [-k all|longest|shortest, -l genes_to_extract -m] -i i
 Options:
 			-i input_gff	Provide input GFF to extract genes (mandatory).
 			-l gene_list	Provide a list of genes to extract (optional).
-			-m (boolean)	Consider list provided on -l as mRNA ids. (warning, different isoforms of the same gene will cause duplicated entries for that gene)
+			-m (boolean)	Consider list provided on -l as mRNA IDs.
 			-k				Transcript to keep. Arguments are 'longest','shortest',
 							'all'(default).
 			-h				Print this help
