@@ -641,6 +641,22 @@ sub printGene{
 
 }
 
+# geneid2mrnaid
+# mrnaid2geneid
+sub mrnaid2geneid{
+	my $genes=shift;
+	my %eq;
+	foreach my $gene(keys %$genes){
+		my $mrnas=$genes->{$gene}->{mRNA};
+		foreach my $mrna(keys %$mrnas){
+			$eq{$mrna}=$gene;
+			
+		}
+	}
+	return \%eq;
+}
+
+
 
 # filter transcripts on a gene structure. if returns 0, no transcript associated to the gene
 # options are, "longest", that keep only the longest transcript; and "shortest", that keep only shortest transcript. if transcripts are equally length, keep just one. the last that it finds

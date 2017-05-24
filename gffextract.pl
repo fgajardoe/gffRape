@@ -19,16 +19,17 @@ use Data::Dumper;
 #use Misc; #qw(gff2genemodel printGene filterGeneTranscripts);
 use gffRapeLib;
 
-our($opt_k,$opt_h,$opt_l,$opt_i);
+our($opt_k,$opt_h,$opt_l,$opt_i, $opt_m);
 # Defaults
 $opt_k='all';
 
 
 # Usage
-my $usage="Usage: perl $0 [-k all|longest|shortest, -l genes_to_extract] -i input.gff
+my $usage="Usage: perl $0 [-k all|longest|shortest, -l genes_to_extract -m] -i input.gff
 Options:
 			-i input_gff	Provide input GFF to extract genes (mandatory).
 			-l gene_list	Provide a list of genes to extract (optional).
+			-m (boolean)	Consider list provided on -l as mRNA ids. (warning, different isoforms of the same gene will cause duplicated entries for that gene)
 			-k				Transcript to keep. Arguments are 'longest','shortest',
 							'all'(default).
 			-h				Print this help
@@ -36,7 +37,7 @@ Options:
 ";
 
 # Get options
-getopts('hk:l:i:');
+getopts('hk:l:i:m');
 
 # Check if there is input
 if(($opt_h)||(!$opt_i)){
@@ -56,6 +57,37 @@ if($opt_l){
 else{
 	@genelst=keys %$genes;
 }
+
+if($opt_m){
+	my @fixed_genelst;
+	my $geneids;
+	my $eqref=mrnaid2geneid($genes);
+#	print Dumper $eqref;
+#	exit;
+	my %eq=%$eqref;
+#	print Dumper %eq;
+
+#	exit;
+
+	foreach my $m(@genelst){
+		chomp $m;
+#		print "M:".$m."\n";
+		if(exists $eq{$m}){
+			my $g=$eq{$m};
+			$geneids->{$g}=1;
+			#print $m." - ".$g." - ".$eq{$m}."\n";
+		}
+		else{ print STDERR "Warning: $m mRNA ID not found.\n";}
+	}
+
+	foreach my $id(keys %$geneids){
+		push @fixed_genelst,$id;
+	}
+
+	@genelst=@fixed_genelst;
+}
+
+#exit;
 
 #recorreemos la lista de genes
 foreach my $idlst(@genelst){
