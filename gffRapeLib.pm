@@ -607,8 +607,50 @@ sub gff2genemodel_reset_id{
 }
 
 
+
+sub printGeneGene{ # gene based coordinates
+	my $gene=shift;
+	my $diff=shift;
+	my $seqid=shift;
+	my @valid_childs=("mRNA","exon","intron","CDS","start_codon","stop_codon","transcript");
+	# Imprimimos el elemento actual
+		
+	my $att=$gene->{attributes};
+	my $attributes="";
+	foreach my $k(keys %$att){
+		$attributes=$attributes.";".$k."=".$$att{$k};
+	}
+	$attributes=~s/^;//;
+
+	if(!$diff){
+		$diff=$gene->{start}-1;
+		$seqid=$$att{ID};
+	}
+	my $gstart=$gene->{start}-$diff;
+	my $gend=$gene->{end}-$diff;
+
+	my $gene_line=join("\t",$seqid,$gene->{source},$gene->{type},$gstart,$gend,$gene->{score},$gene->{strand},$gene->{phase},$attributes);
+	print $gene_line."\n";
+
+	# Imprimimos los elementos dentro de el (mrna,cds,exon...)
+	
+	foreach my $k(keys %$gene){
+		foreach my $valid(@valid_childs){
+			if($k eq $valid){
+				my $childs=$gene->{$k};
+				foreach my $child_id(keys %$childs){
+					my $child=$childs->{$child_id};
+					printGeneGene($child,$diff,$seqid);
+				}
+
+			}
+		}
+	}
+
+}
+
 # print gene and all its childs. this function is RECURSIVE
-sub printGene{
+sub printGeneGenomic{ # genomic based coordinates
 	my $gene=shift;
 	my @valid_childs=("mRNA","exon","intron","CDS","start_codon","stop_codon","transcript");
 	
@@ -632,7 +674,7 @@ sub printGene{
 				my $childs=$gene->{$k};
 				foreach my $child_id(keys %$childs){
 					my $child=$childs->{$child_id};
-					printGene($child);
+					printGeneGenomic($child);
 				}
 
 			}
@@ -643,6 +685,7 @@ sub printGene{
 
 # geneid2mrnaid
 # mrnaid2geneid
+# return a hash where key is mRNA ID y value is the corresponding gene ID.
 sub mrnaid2geneid{
 	my $genes=shift;
 	my %eq;

@@ -19,7 +19,7 @@ use Data::Dumper;
 #use Misc; #qw(gff2genemodel printGene filterGeneTranscripts);
 use gffRapeLib;
 
-our($opt_k,$opt_h,$opt_l,$opt_i, $opt_m);
+our($opt_k,$opt_h,$opt_l,$opt_i, $opt_m, $opt_g);
 # Defaults
 $opt_k='all';
 
@@ -32,12 +32,13 @@ Options:
 			-m (boolean)	Consider list provided on -l as mRNA IDs.
 			-k				Transcript to keep. Arguments are 'longest','shortest',
 							'all'(default).
+			-g (boolean)	Print output GFF using gene-based coordinates (default is genome-based)
 			-h				Print this help
 
 ";
 
 # Get options
-getopts('hk:l:i:m');
+getopts('hk:l:i:mg');
 
 # Check if there is input
 if(($opt_h)||(!$opt_i)){
@@ -100,7 +101,12 @@ foreach my $idlst(@genelst){
 	}
 #	if($filtered_gene!=0){
 	if($filtered_gene){ # testeando. cambie la linea de arriba por esta. para evitar un warning que me aparecia
-		printGene($filtered_gene);
+		if($opt_g){
+			printGeneGene($filtered_gene);
+		}
+		else{
+			printGeneGenomic($filtered_gene);
+		}
 	}
 }
 
